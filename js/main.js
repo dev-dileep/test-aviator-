@@ -9324,7 +9324,287 @@ var T3e = Object.defineProperty,
       function Iv(n) {
         return n === JB;
       }
-    
+      class sO {
+        constructor(t, e) {
+          (this._viewContainerRef = t),
+            (this._templateRef = e),
+            (this._created = !1);
+        }
+        create() {
+          (this._created = !0),
+            this._viewContainerRef.createEmbeddedView(this._templateRef);
+        }
+        destroy() {
+          (this._created = !1), this._viewContainerRef.clear();
+        }
+        enforceState(t) {
+          t && !this._created
+            ? this.create()
+            : !t && this._created && this.destroy();
+        }
+      }
+      let Bs = (() => {
+          class n {
+            constructor() {
+              (this._defaultUsed = !1),
+                (this._caseCount = 0),
+                (this._lastCaseCheckIndex = 0),
+                (this._lastCasesMatched = !1);
+            }
+            set ngSwitch(e) {
+              (this._ngSwitch = e),
+                0 === this._caseCount && this._updateDefaultCases(!0);
+            }
+            _addCase() {
+              return this._caseCount++;
+            }
+            _addDefault(e) {
+              this._defaultViews || (this._defaultViews = []),
+                this._defaultViews.push(e);
+            }
+            _matchCase(e) {
+              const i = e == this._ngSwitch;
+              return (
+                (this._lastCasesMatched = this._lastCasesMatched || i),
+                this._lastCaseCheckIndex++,
+                this._lastCaseCheckIndex === this._caseCount &&
+                  (this._updateDefaultCases(!this._lastCasesMatched),
+                  (this._lastCaseCheckIndex = 0),
+                  (this._lastCasesMatched = !1)),
+                i
+              );
+            }
+            _updateDefaultCases(e) {
+              if (this._defaultViews && e !== this._defaultUsed) {
+                this._defaultUsed = e;
+                for (let i = 0; i < this._defaultViews.length; i++)
+                  this._defaultViews[i].enforceState(e);
+              }
+            }
+          }
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)();
+            }),
+            (n.ɵdir = Rt({
+              type: n,
+              selectors: [["", "ngSwitch", ""]],
+              inputs: { ngSwitch: "ngSwitch" },
+            })),
+            n
+          );
+        })(),
+        yo = (() => {
+          class n {
+            constructor(e, i, r) {
+              (this.ngSwitch = r), r._addCase(), (this._view = new sO(e, i));
+            }
+            ngDoCheck() {
+              this._view.enforceState(
+                this.ngSwitch._matchCase(this.ngSwitchCase)
+              );
+            }
+          }
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)(J(ul), J(Tr), J(Bs, 9));
+            }),
+            (n.ɵdir = Rt({
+              type: n,
+              selectors: [["", "ngSwitchCase", ""]],
+              inputs: { ngSwitchCase: "ngSwitchCase" },
+            })),
+            n
+          );
+        })(),
+        Ou = (() => {
+          class n {
+            constructor(e, i, r) {
+              r._addDefault(new sO(e, i));
+            }
+          }
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)(J(ul), J(Tr), J(Bs, 9));
+            }),
+            (n.ɵdir = Rt({
+              type: n,
+              selectors: [["", "ngSwitchDefault", ""]],
+            })),
+            n
+          );
+        })(),
+        Yh = (() => {
+          class n {
+            constructor(e, i, r) {
+              (this._ngEl = e),
+                (this._differs = i),
+                (this._renderer = r),
+                (this._ngStyle = null),
+                (this._differ = null);
+            }
+            set ngStyle(e) {
+              (this._ngStyle = e),
+                !this._differ &&
+                  e &&
+                  (this._differ = this._differs.find(e).create());
+            }
+            ngDoCheck() {
+              if (this._differ) {
+                const e = this._differ.diff(this._ngStyle);
+                e && this._applyChanges(e);
+              }
+            }
+            _setStyle(e, i) {
+              const [r, s] = e.split(".");
+              null != (i = null != i && s ? `${i}${s}` : i)
+                ? this._renderer.setStyle(this._ngEl.nativeElement, r, i)
+                : this._renderer.removeStyle(this._ngEl.nativeElement, r);
+            }
+            _applyChanges(e) {
+              e.forEachRemovedItem((i) => this._setStyle(i.key, null)),
+                e.forEachAddedItem((i) =>
+                  this._setStyle(i.key, i.currentValue)
+                ),
+                e.forEachChangedItem((i) =>
+                  this._setStyle(i.key, i.currentValue)
+                );
+            }
+          }
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)(J(Si), J(Ov), J(Ho));
+            }),
+            (n.ɵdir = Rt({
+              type: n,
+              selectors: [["", "ngStyle", ""]],
+              inputs: { ngStyle: "ngStyle" },
+            })),
+            n
+          );
+        })(),
+        Md = (() => {
+          class n {
+            constructor(e) {
+              (this._viewContainerRef = e),
+                (this._viewRef = null),
+                (this.ngTemplateOutletContext = null),
+                (this.ngTemplateOutlet = null);
+            }
+            ngOnChanges(e) {
+              if (e.ngTemplateOutlet) {
+                const i = this._viewContainerRef;
+                this._viewRef && i.remove(i.indexOf(this._viewRef)),
+                  (this._viewRef = this.ngTemplateOutlet
+                    ? i.createEmbeddedView(
+                        this.ngTemplateOutlet,
+                        this.ngTemplateOutletContext
+                      )
+                    : null);
+              } else
+                this._viewRef &&
+                  e.ngTemplateOutletContext &&
+                  this.ngTemplateOutletContext &&
+                  (this._viewRef.context = this.ngTemplateOutletContext);
+            }
+          }
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)(J(ul));
+            }),
+            (n.ɵdir = Rt({
+              type: n,
+              selectors: [["", "ngTemplateOutlet", ""]],
+              inputs: {
+                ngTemplateOutletContext: "ngTemplateOutletContext",
+                ngTemplateOutlet: "ngTemplateOutlet",
+              },
+              features: [Js],
+            })),
+            n
+          );
+        })();
+      function Ql(n, t) {
+        return new Wt(2100, "");
+      }
+      class cte {
+        createSubscription(t, e) {
+          return t.subscribe({
+            next: e,
+            error: (i) => {
+              throw i;
+            },
+          });
+        }
+        dispose(t) {
+          t.unsubscribe();
+        }
+        onDestroy(t) {
+          t.unsubscribe();
+        }
+      }
+      class ute {
+        createSubscription(t, e) {
+          return t.then(e, (i) => {
+            throw i;
+          });
+        }
+        dispose(t) {}
+        onDestroy(t) {}
+      }
+      const dte = new ute(),
+        hte = new cte();
+      let bo = (() => {
+        class n {
+          constructor(e) {
+            (this._ref = e),
+              (this._latestValue = null),
+              (this._subscription = null),
+              (this._obj = null),
+              (this._strategy = null);
+          }
+          ngOnDestroy() {
+            this._subscription && this._dispose();
+          }
+          transform(e) {
+            return this._obj
+              ? e !== this._obj
+                ? (this._dispose(), this.transform(e))
+                : this._latestValue
+              : (e && this._subscribe(e), this._latestValue);
+          }
+          _subscribe(e) {
+            (this._obj = e),
+              (this._strategy = this._selectStrategy(e)),
+              (this._subscription = this._strategy.createSubscription(e, (i) =>
+                this._updateLatestValue(e, i)
+              ));
+          }
+          _selectStrategy(e) {
+            if (uv(e)) return dte;
+            if (p3(e)) return hte;
+            throw Ql();
+          }
+          _dispose() {
+            this._strategy.dispose(this._subscription),
+              (this._latestValue = null),
+              (this._subscription = null),
+              (this._obj = null);
+          }
+          _updateLatestValue(e, i) {
+            e === this._obj &&
+              ((this._latestValue = i), this._ref.markForCheck());
+          }
+        }
+        return (
+          (n.ɵfac = function (e) {
+            return new (e || n)(J(En, 16));
+          }),
+          (n.ɵpipe = fr({ name: "async", type: n, pure: !1 })),
+          n
+        );
+      })();
+
       let Pt = (() => {
         class n {}
         return (
@@ -9945,7 +10225,7 @@ var T3e = Object.defineProperty,
         );
       })();
       const Qte = bB(BZ, "browser", [
-          { provide: zg, useValue: "browser" },
+          { provide: zg, useValue: JB },
           {
             provide: hB,
             useValue: function qte() {
@@ -53397,7 +53677,95 @@ var T3e = Object.defineProperty,
             (n.ɵprov = vt({ token: n, factory: n.ɵfac, providedIn: "root" })),
             n
           );
-        })();
+        })(),
+        mj = (() => {
+          class n {}
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)();
+            }),
+            (n.ɵmod = dt({ type: n })),
+            (n.ɵinj = ut({ providers: [B0] })),
+            n
+          );
+        })(),
+        Sj = (() => {
+          class n {}
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)();
+            }),
+            (n.ɵmod = dt({ type: n })),
+            (n.ɵinj = ut({ imports: [[Pt]] })),
+            n
+          );
+        })(),
+        xj = (() => {
+          class n {}
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)();
+            }),
+            (n.ɵmod = dt({ type: n })),
+            (n.ɵinj = ut({ imports: [[Pt]] })),
+            n
+          );
+        })(),
+        Aj = (() => {
+          class n {}
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)();
+            }),
+            (n.ɵmod = dt({ type: n })),
+            (n.ɵinj = ut({ imports: [[Pt]] })),
+            n
+          );
+        })(),
+        Rj = (() => {
+          class n {}
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)();
+            }),
+            (n.ɵmod = dt({ type: n })),
+            (n.ɵinj = ut({ imports: [[Pt]] })),
+            n
+          );
+        })(),
+        Dj = (() => {
+          class n {}
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)();
+            }),
+            (n.ɵmod = dt({ type: n })),
+            (n.ɵinj = ut({ imports: [[Pt]] })),
+            n
+          );
+        })(),
+        Nj = (() => {
+          class n {}
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)();
+            }),
+            (n.ɵmod = dt({ type: n })),
+            (n.ɵinj = ut({ imports: [[Pt]] })),
+            n
+          );
+        })(),
+        kj = (() => {
+          class n {}
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)();
+            }),
+            (n.ɵmod = dt({ type: n })),
+            (n.ɵinj = ut({ imports: [[Pt]] })),
+            n
+          );
+        })()
       
       new Kt("live announcer delay", {
         providedIn: "root",
@@ -55620,9 +55988,193 @@ var T3e = Object.defineProperty,
           })(Gf || (Gf = {})),
           Gf
         ))();
+ 
+      var Wu, bl;
+      !(function (n) {
+        (n[(n.CONNECTING = 0)] = "CONNECTING"),
+          (n[(n.OPEN = 1)] = "OPEN"),
+          (n[(n.CLOSING = 2)] = "CLOSING"),
+          (n[(n.CLOSED = 3)] = "CLOSED");
+      })((Wu = Wu || (Wu = {}))),
+        (function (n) {
+          (n[(n.ACTIVE = 0)] = "ACTIVE"),
+            (n[(n.DEACTIVATING = 1)] = "DEACTIVATING"),
+            (n[(n.INACTIVE = 2)] = "INACTIVE");
+        })((bl = bl || (bl = {})));
+      class na {
+        constructor(t) {
+          this.versions = t;
+        }
+        supportedVersions() {
+          return this.versions.join(",");
+        }
+        protocolVersions() {
+          return this.versions.map((t) => `v${t.replace(".", "")}.stomp`);
+        }
+      }
+      (na.V1_0 = "1.0"),
+        (na.V1_1 = "1.1"),
+        (na.V1_2 = "1.2"),
+        (na.default = new na([na.V1_2, na.V1_1, na.V1_0]));
   
-    
-      let dye = (() => {
+      function lye(n, t) {
+        if (1 & n) {
+          const e = _t();
+          R(0, "li", 6)(1, "div")(2, "span"),
+            j(3),
+            $(4, "transloco"),
+            D()(),
+            R(5, "app-ui-switcher", 7),
+            Oe("toggle", function (r) {
+              const o = ct(e).$implicit;
+              return se().user.settings.changeOther(o, r);
+            }),
+            D()();
+        }
+        if (2 & n) {
+          const e = t.$implicit,
+            i = se();
+          P(3),
+            We(
+              K(4, 2, "shared.modals.other_settings." + i.translations.get(e))
+            ),
+            P(2),
+            B("ngModel", i.user.settings.getOther(e));
+        }
+      }
+      let cye = (() => {
+          class n {
+            constructor(e, i, r) {
+              (this.activeModal = e),
+                (this.app = i),
+                (this.user = r),
+                (this.translations = new Map([
+                  [
+                    cc.HideLiveBetsAndStatistics,
+                    "Hide_Live_Bets_and_Statistics",
+                  ],
+                  [cc.HideMyActivity, "Hide_My_Activity"],
+                ]));
+            }
+          }
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)(J(ns), J(on), J(yl));
+            }),
+            (n.ɵcmp = st({
+              type: n,
+              selectors: [["app-other-settings"]],
+              decls: 10,
+              vars: 4,
+              consts: [
+                [1, "modal-header", "canSelect"],
+                [
+                  "type",
+                  "button",
+                  "aria-label",
+                  "Close",
+                  1,
+                  "close",
+                  3,
+                  "click",
+                ],
+                ["aria-hidden", "true"],
+                [1, "modal-body", "py-2", "px-2"],
+                [1, "list-group"],
+                [
+                  "class",
+                  "list-group-item d-flex justify-content-between align-items-center px-0",
+                  4,
+                  "ngFor",
+                  "ngForOf",
+                ],
+                [
+                  1,
+                  "list-group-item",
+                  "d-flex",
+                  "justify-content-between",
+                  "align-items-center",
+                  "px-0",
+                ],
+                [3, "ngModel", "toggle"],
+              ],
+              template: function (e, i) {
+                1 & e &&
+                  (R(0, "div", 0)(1, "span"),
+                  j(2),
+                  $(3, "transloco"),
+                  D(),
+                  R(4, "button", 1),
+                  Oe("click", function () {
+                    return i.activeModal.close();
+                  }),
+                  R(5, "span", 2),
+                  j(6, "\xd7"),
+                  D()()(),
+                  R(7, "div", 3)(8, "ul", 4),
+                  ne(9, lye, 6, 4, "li", 5),
+                  D()()),
+                  2 & e &&
+                    (P(2),
+                    We(K(3, 2, "shared.modals.other_settings.title")),
+                    P(7),
+                    B("ngForOf", i.user.settings.otherKeys));
+              },
+              directives: [ii, Qo, Po],
+              pipes: [Ut],
+              styles: [
+                ".list-group[_ngcontent-%COMP%]{color:#fff}.list-group[_ngcontent-%COMP%]   .list-group-item[_ngcontent-%COMP%]{background-color:transparent;border-top:1px solid rgba(255,255,255,.1);font-size:14px;height:34px}.list-group[_ngcontent-%COMP%]   .list-group-item[_ngcontent-%COMP%]   span.badge.badge-success[_ngcontent-%COMP%]{border-radius:11px;background-color:#123405;border:1px solid #427f00;font-size:14px}.list-group[_ngcontent-%COMP%]   .list-group-item[_ngcontent-%COMP%]:first-child{border-top:0}",
+              ],
+            })),
+            n
+          );
+        })(),
+        uye = (() => {
+          class n {
+            constructor(e, i) {
+              (this.ngbModal = e),
+                (this.modal = i),
+                (this.activeInstances = []);
+            }
+            init() {
+              this.ngbModal.activeInstances.subscribe(
+                (e) => (this.activeInstances = e)
+              ),
+                this.modal.onOpen$.subscribe((e) => this.open(e.key, e.params));
+            }
+            open(e, i = null) {
+              switch (e) {
+                case ri.bugReport:
+                  break;
+                case ri.fairnessSettings:
+                  this.openModal(Lf, { size: "lg" });
+                  break;
+                case ri.otherSettings:
+                  this.openModal(cye);
+              }
+            }
+            openModal(e, i = {}, r = {}) {
+              if (
+                this.activeInstances.some(
+                  (a) => a.componentInstance instanceof e
+                )
+              )
+                return;
+              const o = this.ngbModal.open(e, i);
+              Object.entries(r).forEach(([a, l]) => {
+                o.componentInstance[a] = l;
+              });
+            }
+          }
+          return (
+            (n.ɵfac = function (e) {
+              return new (e || n)(He(B0), He($o));
+            }),
+            (n.ɵprov = vt({ token: n, factory: n.ɵfac, providedIn: "root" })),
+            n
+          );
+        })(),
+        dye = (() => {
           class n {
             constructor(e, i, r, s, o) {
               (this.main = e),
@@ -64484,6 +65036,7 @@ var T3e = Object.defineProperty,
                 J(BI),
                 J(Kc),
                 J(XS),
+                J(uye),
                 J(dye),
                 J(B0)
               );
